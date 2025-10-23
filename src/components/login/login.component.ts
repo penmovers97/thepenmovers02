@@ -1,7 +1,8 @@
 
 
+
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { SupabaseService } from '../../services/supabase.service';
+import { AuthService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-login',
@@ -10,14 +11,16 @@ import { SupabaseService } from '../../services/supabase.service';
   imports: []
 })
 export class LoginComponent {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly authService = inject(AuthService);
 
   readonly email = signal('');
   readonly password = signal('');
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
-  async handleLogin(): Promise<void> {
+  async handleLogin(event: Event): Promise<void> {
+    event.preventDefault(); // This is the critical fix to prevent page reload.
+
     if (!this.email().trim() || !this.password().trim()) {
       this.error.set('Please enter both email and password.');
       return;
@@ -30,7 +33,7 @@ export class LoginComponent {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     try {
-      const result = this.supabaseService.signInWithPassword(this.email(), this.password());
+      const result = this.authService.signInWithPassword(this.email(), this.password());
       
       if (!result.success) {
           this.error.set(result.error || 'An unknown error occurred.');
