@@ -6,7 +6,7 @@ const MOCK_SESSION = { user: { email: 'member@thepenmovers.com' } };
 @Injectable({
   providedIn: 'root'
 })
-export class SupabaseService {
+export class AuthService {
   // The session signal now tracks our simple, hardcoded login state.
   // undefined = initializing, null = logged out, object = logged in.
   readonly session = signal<object | null | undefined>(undefined);
