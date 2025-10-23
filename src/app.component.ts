@@ -1,7 +1,8 @@
 
 
+
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
-import { SupabaseService } from './services/supabase.service';
+import { AuthService } from './services/supabase.service';
 
 import { GroundedSearchComponent } from './components/grounded-search/grounded-search.component';
 import { AudioTranscriberComponent } from './components/audio-transcriber/audio-transcriber.component';
@@ -41,9 +42,9 @@ interface NavItem {
   ]
 })
 export class AppComponent {
-  private readonly supabaseService = inject(SupabaseService);
+  private readonly authService = inject(AuthService);
   
-  readonly session = this.supabaseService.session;
+  readonly session = this.authService.session;
   readonly selectedFeature = signal<Feature>('home');
   readonly isMobileMenuOpen = signal(false);
 
@@ -64,7 +65,7 @@ export class AppComponent {
   }
 
   signOut(): void {
-    this.supabaseService.signOut();
+    this.authService.signOut();
     this.isMobileMenuOpen.set(false);
   }
 }
